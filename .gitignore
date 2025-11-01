@@ -39,3 +39,8 @@
 
 # debug information files
 *.dwo
+
+file.parity
+recovered.txt
+rs_file_encode
+rs_file_decode
