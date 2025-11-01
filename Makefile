@@ -5,6 +5,7 @@
 # Compiler and flags
 CXX       := g++
 CXXFLAGS  := -std=c++11 -O3 -Wall -Wextra -I./
+#CXXFLAGS  := -std=c++17 -Wall -Wextra -Wpedantic -g -O0 -DDEBUG -I./
 LDFLAGS   := 
 
 # Output directories
@@ -14,7 +15,9 @@ BIN_DIR   := .
 
 # Source files
 SRCS := $(SRC_DIR)/rs_file_encode.cpp \
-        $(SRC_DIR)/rs_file_decode.cpp
+        $(SRC_DIR)/rs_file_decode.cpp \
+		$(SRC_DIR)/rs_codec.cpp \
+		$(SRC_DIR)/reed.cpp
 
 # Object files (in build/)
 OBJS := $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
@@ -22,9 +25,10 @@ OBJS := $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 # Executables
 EXE_ENC := $(BIN_DIR)/rs_file_encode
 EXE_DEC := $(BIN_DIR)/rs_file_decode
+EXE_MAIN := $(BIN_DIR)/reed
 
 # Default target
-all: $(EXE_ENC) $(EXE_DEC)
+all: $(EXE_ENC) $(EXE_DEC) $(EXE_MAIN)
 
 # Build rules
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
@@ -39,6 +43,10 @@ $(EXE_DEC): $(BUILD_DIR)/rs_file_decode.o
 	@echo "Linking $@..."
 	$(CXX) $^ -o $@ $(LDFLAGS)
 
+$(EXE_MAIN): $(BUILD_DIR)/reed.o $(BUILD_DIR)/rs_codec.o
+	@echo "Linking $@..."
+	$(CXX) $^ -o $@ $(LDFLAGS)
+
 # Create build directory if needed
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -46,11 +54,12 @@ $(BUILD_DIR):
 # Housekeeping
 clean:
 	@echo "Cleaning build artifacts..."
-	rm -rf $(BUILD_DIR) $(EXE_ENC) $(EXE_DEC)
+	rm -rf $(BUILD_DIR) $(EXE_ENC) $(EXE_DEC) $(EXE_MAIN)
 
 # Convenience targets
 encode: $(EXE_ENC)
 decode: $(EXE_DEC)
+reed: $(EXE_MAIN)
 
 # Optional test run
 test: $(EXE_ENC) $(EXE_DEC)
@@ -60,5 +69,11 @@ test: $(EXE_ENC) $(EXE_DEC)
 	printf '\x00\xFF' | dd of=input_corrupt.txt bs=1 seek=10 count=2 conv=notrunc
 	./rs_file_decode input_corrupt.txt file.parity
 	sha256sum input.txt recovered.txt
+	./reed -e input.txt
+	cp input.txt input_corrupt.txt
+	printf '\x00\xFF' | dd of=input_corrupt.txt bs=1 seek=10 count=2 conv=notrunc
+	./reed -d input.txt
+	sha256sum input.txt input.txt.recovered
 
-.PHONY: all clean encode decode test
+
+.PHONY: all clean encode decode reed test

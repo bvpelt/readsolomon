@@ -44,3 +44,6 @@ file.parity
 recovered.txt
 rs_file_encode
 rs_file_decode
+reed
+*.parity
+*.recovered

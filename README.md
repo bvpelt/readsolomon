@@ -3,8 +3,7 @@
 ## Compile using
 
 ```bash
-g++ -std=c++11 rs_file_encode.cpp -O3 -o rs_file_encode
-g++ -std=c++11 rs_file_decode.cpp -O3 -o rs_file_decode
+make all
 ```
 
 ## Usage
@@ -18,28 +17,31 @@ Using an input file: example.html for encoding and example.html for decoding wit
 ### Encode
 
 ```bash
-./rs_file_encode example.html
+./rs_file_encode input.txt # generates file.parity
+./reed -e input.txt        # generates input.txt.parity
 ```
-
-This generates a file.parity
 
 ### Decode
 
 #### No error correction needed
 
 ```bash
-./rs_file_decode example.html file.parity
-diff example.html recovered.txt
+./rs_file_decode input.txt file.parity # generates recovered.txt
+diff input.txt recovered.txt
 ```
-
-This generates recovered.txt which is identical to example.html
 
 #### Error correction needed
 
 ```bash
-./rs_file_decode example-add.html file.parity
-diff example.html recovered.txt # compare the original file, no differences
-diff example-add.html recovered.txt # compare the input to the corrected file, differences since corrected
+./rs_file_decode input_corrupt.txt file.parity
+diff input.txt recovered.txt                # compare the original file, no differences
+diff input_corrupt.txt recovered.txt        # compare the input to the corrected file, differences since corrected
+
+./reed -d input.txt
+diff input.txt input.txt.recovered          # compare the original file, no differences
+diff input_corrupt.txt input.txt.recovered  # compare the input to the corrected file, differences since corrected
+
+# Alternative
+make test
 ```
 
-This generates recovered.txt which is identical to example.html
