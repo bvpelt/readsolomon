@@ -45,5 +45,6 @@ recovered.txt
 rs_file_encode
 rs_file_decode
 reed
+input_corrupt.txt
 *.parity
 *.recovered
