@@ -47,6 +47,34 @@ $(EXE_MAIN): $(BUILD_DIR)/reed.o $(BUILD_DIR)/rs_codec.o
 	@echo "Linking $@..."
 	$(CXX) $^ -o $@ $(LDFLAGS)
 
+# =========================
+# Default target (help)
+# =========================
+.DEFAULT_GOAL := help
+
+help:
+	@echo ""
+	@echo "Reed–Solomon File Codec Makefile"
+	@echo "--------------------------------"
+	@echo "Available targets:"
+	@echo "  make all               Build all executables (encoder, decoder, reed)"
+	@echo "  make encode            Build rs_file_encode only"
+	@echo "  make decode            Build rs_file_decode only"
+	@echo "  make reed              Build main reed executable"
+	@echo "  make clean             Remove all build artifacts"
+	@echo "  make rebuild-listing   Rebuild and generate preprocessed listings"
+	@echo "  make test              Run the automated encode/decode test sequence"
+	@echo ""
+	@echo "Examples:"
+	@echo "  make all"
+	@echo "  ./reed -e input.txt     # Encode"
+	@echo "  ./reed -d input.txt     # Decode"
+	@echo ""
+	@echo "To generate assembly listings instead of preprocessed sources,"
+	@echo "edit the 'rebuild-listing' target and uncomment the asm command line."
+	@echo ""
+
+
 # Create build directory if needed
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)

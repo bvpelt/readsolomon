@@ -7,8 +7,8 @@ int main(int argc, char* argv[])
 {
     if (argc != 3) {
         std::cerr << "Usage:\n"
-                  << "  reed -e <filename>   Encode file → filename.parity\n"
-                  << "  reed -d <filename>   Decode filename.parity → filename.recovered\n";
+                  << "  reed -e <filename>   # Encode file → filename.parity\n"
+                  << "  reed -d <filename>   # Decode filename.parity → filename.recovered\n";
         return 1;
     }
 
