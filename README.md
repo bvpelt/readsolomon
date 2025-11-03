@@ -5,6 +5,29 @@
 ```bash
 make all
 ```
+## Pseudocode
+
+```text
+# Encode
+bytes = utf8_encode(text)
+k = 1024
+parity_bytes = 64
+blocks = split_into_blocks(bytes, k)
+for each block in blocks:
+    parity = RS_encode(block, k, k+parity_bytes)
+    write_block_to_sidecar(block_index, parity)
+
+# Decode
+for each block_index:
+    block = read_block_from_file_or_zeroes(...)
+    parity = read_parity(block_index)
+    recovered_block = RS_decode(block + parity)
+    if decode_failed:
+       report unrecoverable
+    else:
+       append recovered_block
+text = utf8_decode(concatenate(recovered_blocks))
+```
 
 ## Usage
 
