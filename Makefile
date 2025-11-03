@@ -56,13 +56,25 @@ clean:
 	@echo "Cleaning build artifacts..."
 	rm -rf $(BUILD_DIR) $(EXE_ENC) $(EXE_DEC) $(EXE_MAIN)
 
+# Generate listing
+# Rebuild with preprocessed listings (macros expanded)
+rebuild-listing: clean
+	@echo "Rebuilding with preprocessed listings..."
+	mkdir -p $(BUILD_DIR)/listing
+	@for src in $(SRCS); do \
+	    base=$$(basename $$src .cpp); \
+	    echo "Generating listing for $$src → $(BUILD_DIR)/listing/$$base.i"; \
+	    $(CXX) $(CXXFLAGS) -E $$src -o $(BUILD_DIR)/listing/$$base.i; \
+	done
+	@echo "Preprocessed listings stored in $(BUILD_DIR)/listing/"
+
 # Convenience targets
 encode: $(EXE_ENC)
 decode: $(EXE_DEC)
 reed: $(EXE_MAIN)
 
 # Optional test run
-test: $(EXE_ENC) $(EXE_DEC)
+test: $(EXE_ENC) $(EXE_DEC) $(EXE_MAIN)
 	@echo "Running test sequence..."
 	./rs_file_encode input.txt
 	cp input.txt input_corrupt.txt
@@ -76,4 +88,4 @@ test: $(EXE_ENC) $(EXE_DEC)
 	sha256sum input.txt input.txt.recovered
 
 
-.PHONY: all clean encode decode reed test
+.PHONY: all clean encode decode reed test rebuild_listing
