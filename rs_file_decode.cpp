@@ -30,13 +30,7 @@ int main(int argc, char** argv) {
 
     // === Setup Reed–Solomon ===
     ezpwd::RS<255,223> rs;
-    // begin change
-    // const size_t K = ezpwd::RS<255,223>::kk;
-    // These are the template parameters: 255 total symbols, 223 data bytes.
-    //const size_t N = 255;
     const size_t K = 223;
-    //const size_t parity_len = rs.nroots();
-    // end change
 
     const size_t parity_len = rs.nroots();
 
