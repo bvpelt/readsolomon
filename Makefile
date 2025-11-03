@@ -64,9 +64,13 @@ rebuild-listing: clean
 	@for src in $(SRCS); do \
 	    base=$$(basename $$src .cpp); \
 	    echo "Generating listing for $$src → $(BUILD_DIR)/listing/$$base.i"; \
-	    $(CXX) $(CXXFLAGS) -E $$src -o $(BUILD_DIR)/listing/$$base.i; \
+	    $(CXX) $(CXXFLAGS) -E -P $$src -o $(BUILD_DIR)/listing/$$base.i; \
 	done
 	@echo "Preprocessed listings stored in $(BUILD_DIR)/listing/"
+
+#
+# Generate asm listing replace above $(CXX) command with:
+# $(CXX) $(CXXFLAGS) -g -O2 -fverbose-asm -Wa,-adhln -S $$src -o $(BUILD_DIR)/listing/$$base.i; \	
 
 # Convenience targets
 encode: $(EXE_ENC)
