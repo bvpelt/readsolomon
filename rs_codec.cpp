@@ -55,10 +55,19 @@ bool rs_encode_file(const std::string& inputFile)
 }
 
 // Decode ---------------------------------------------------
-bool rs_decode_file(const std::string& inputFile)
+bool rs_decode_file(const std::string& inputFile, const std::string& parityFileOpt)
 {
-    // inputFile should have .parity extension
+
+     // Determine parity filename
     std::string baseFile = inputFile;
+    std::string parityFile = parityFileOpt;
+
+    if (parityFile.empty()) {
+        // Default: <inputFile>.parity
+        parityFile = inputFile + ".parity";
+    }
+
+    // Remove ".parity" from baseFile if inputFile itself had that suffix
     if (baseFile.size() > 7 &&
         baseFile.substr(baseFile.size() - 7) == ".parity") {
         baseFile = baseFile.substr(0, baseFile.size() - 7);
@@ -72,7 +81,7 @@ bool rs_decode_file(const std::string& inputFile)
     in.close();
 
     // === Load parity sidecar ===
-    std::string parityFile = inputFile + ".parity";
+    //std::string parityFile = inputFile + ".parity";
     std::ifstream pin(parityFile, std::ios::binary);
     if (!pin) { std::cerr << "Kon parity niet openen\n"; return 1; }
     std::vector<uint8_t> parbuf((std::istreambuf_iterator<char>(pin)),

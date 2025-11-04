@@ -67,8 +67,9 @@ help:
 	@echo ""
 	@echo "Examples:"
 	@echo "  make all"
-	@echo "  ./reed -e input.txt     # Encode"
-	@echo "  ./reed -d input.txt     # Decode"
+	@echo "  ./reed -e input.txt                    # Encode"
+	@echo "  ./reed -d input.txt                    # Decode"
+	@echo "  ./reed -d input.txt -p input.parity    # Decode"
 	@echo ""
 	@echo "To generate assembly listings instead of preprocessed sources,"
 	@echo "edit the 'rebuild-listing' target and uncomment the asm command line."
@@ -117,6 +118,8 @@ test: $(EXE_ENC) $(EXE_DEC) $(EXE_MAIN)
 	cp input.txt input_corrupt.txt
 	printf '\x00\xFF' | dd of=input_corrupt.txt bs=1 seek=10 count=2 conv=notrunc
 	./reed -d input.txt
+	sha256sum input.txt input.txt.recovered
+	./reed -d input.txt -p input.txt.parity
 	sha256sum input.txt input.txt.recovered
 
 
