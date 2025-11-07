@@ -364,4 +364,7 @@ diff input_corrupt.txt input.txt.recovered  # compare the input to the corrected
 make test
 ```
 
-Special characters see https://www.upyesp.org/posts/makrdown-vscode-math-notation/
+Special characters see 
+- https://www.upyesp.org/posts/makrdown-vscode-math-notation/
+- https://www.markdownlang.com/advanced/math.html 
+
